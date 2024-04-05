@@ -1,86 +1,66 @@
-import 'package:flutter/cupertino.dart';
+import 'package:favorite_places_app/providers/places_provider.dart';
+import 'package:favorite_places_app/widgets/image_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/place.dart';
-
-class AddPlaceScreen extends StatefulWidget {
+class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
   @override
-  State<AddPlaceScreen> createState() => _AddPlaceScreenState();
+  ConsumerState<AddPlaceScreen> createState() {
+    return _AddPlaceScreenState();
+  }
 }
 
-class _AddPlaceScreenState extends State<AddPlaceScreen> {
+class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
-  late String _title='';
 
-  void _saveItem(BuildContext context){
-    if(_formKey.currentState!.validate()){
-      _formKey.currentState!.save();
-      Place newPlace = Place(id:'1',name: _title);
-      Navigator.of(context).pop(newPlace);
+  final _titleController = TextEditingController();
+
+  void _savePlace(){
+    final  enteredTitle = _titleController.text;
+
+    if(enteredTitle.isEmpty){
+      return;
     }
+    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle );
+    Navigator.of(context).pop();
+
   }
 
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add a new place'),
+        title: const Text('Add new Place'),
       ),
-      body: Form(
-        key: _formKey,
-
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-           TextFormField(
-             style: TextStyle(color: Colors.white),
-
-             validator: (value){
-               if(value == null || value.isEmpty ){
-                 return 'Cant be null';
-               }
-               return null;
-             },
-             decoration: InputDecoration(
-
-               label: Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: Text('Title'),
-
-
-               ),
-
-
-             ),
-             onSaved: (value){
-               _title = value!;
-             },
-           ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.black38,
-                ),
-                
-
-                  child: Row(
-                    children: [
-                      IconButton(onPressed: (){_saveItem(context);}, icon: Icon(Icons.add,color: Colors.deepPurple[100],)
-                      ),
-                      Text('Add Place',style: TextStyle(color: Colors.deepPurple[100]),)
-                    ],
-                  )
+            TextField(
+              decoration: const InputDecoration(labelText: 'Title'),
+              controller: _titleController,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onBackground,
               ),
-            )
+            ),
+            const SizedBox(height: 10),
+            ImageInput(),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _savePlace,
+              icon: const Icon(Icons.add),
+              label: const Text('Add Place'),
+            ),
           ],
         ),
-
       ),
     );
   }

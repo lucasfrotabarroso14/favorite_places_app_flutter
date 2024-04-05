@@ -1,74 +1,39 @@
 
-import 'package:favorite_places_app/screens/place_detail_screen.dart';
-import 'package:favorite_places_app/widgets/places_list.dart';
+import 'package:favorite_places_app/providers/places_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import '../models/place.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widgets/places_list.dart';
 import 'add_place_screen.dart';
 
-class YourPlacesScreen extends StatefulWidget {
 
-  const YourPlacesScreen({super.key, required this.places});
-  final List<Place> places;
-
-
-
-
-
-
+// onde for consumir os dados de places vou transformar em um consumerwidget
+class PlacesScreen extends ConsumerWidget {
+  const PlacesScreen({super.key});
 
   @override
-  State<YourPlacesScreen> createState() => _YourPlacesScreenState();
-}
-
-
-class _YourPlacesScreenState extends State<YourPlacesScreen> {
-
-  _selectPlace(BuildContext context, Place place){
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (ctx) => PlaceDetailScreen(place: place))
-    );
-  }
-
-
-
-  void _addPlace(BuildContext context) async {
-
-    var newPlace = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (ctx) => AddPlaceScreen())
-    );
-    if (newPlace != null){
-      setState(() {
-        widget.places.add(newPlace);
-
-      });
-    }
-
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref ) {
+    //aqui ele vai receber os dados
+    final userPlaces = ref.watch(userPlacesProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your places'),
+        title: const Text('Your Places'),
         actions: [
-          IconButton(onPressed: () => _addPlace(context),
-            icon: Icon(Icons.add),
-
-
-
-          )
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const AddPlaceScreen(),
+                ),
+              );
+            },
+          ),
         ],
       ),
-      body:Column(children: [
-        
-        Expanded(child: PlacesList(
-          places: widget.places,
-          onSelectPlace:(place) => _selectPlace(context,place)))
-      ],)
+      body: PlacesList(
+        places: userPlaces,
+      ),
     );
   }
 }

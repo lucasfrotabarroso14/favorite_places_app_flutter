@@ -1,7 +1,9 @@
+
 import 'package:favorite_places_app/screens/your_places_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -26,26 +28,23 @@ final theme = ThemeData().copyWith(
   ),
 );
 
-
-
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: const MyApp(), // Use ProviderScope corretamente
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      title: 'Great places',
+      title: 'Great Places',
       theme: theme,
-      home: YourPlacesScreen(places: [],),
-
+      home: const PlacesScreen(),
     );
   }
 }
-
-

@@ -1,29 +1,42 @@
-import 'package:flutter/cupertino.dart';
+import 'package:favorite_places_app/screens/place_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../models/place.dart';
 
 class PlacesList extends StatelessWidget {
-  const PlacesList({super.key, required this.places, required this.onSelectPlace});
+  const PlacesList({super.key, required this.places});
 
   final List<Place> places;
 
-  final void  Function(Place) onSelectPlace;
-
-
-
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: places.length,
-        itemBuilder: (ctx, index) =>
-            InkWell(
-              onTap:() => onSelectPlace(places[index]),
-              child: ListTile(
-                title: Text(places[index].name,style: TextStyle(color: Colors.white)),
-              ),
-            )
+    if (places.isEmpty) {
+      return Center(
+        child: Text(
+          'No places added yet',
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      );
+    }
 
+    return ListView.builder(
+      itemCount: places.length,
+      itemBuilder: (ctx, index) => ListTile(
+        title: Text(
+          places[index].title,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+        onTap: (){
+          Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (ctx) => PlaceDetailScreen(place: places[index]))
+          );
+        },
+      ),
     );
   }
 }
