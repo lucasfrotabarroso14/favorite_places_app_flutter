@@ -1,7 +1,5 @@
 
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:favorite_places_app/models/place.dart';
 import 'package:favorite_places_app/screens/map_screen.dart';
 import 'package:flutter/cupertino.dart';
