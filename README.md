@@ -29,6 +29,3 @@ Ao clicar em um local, o usuário é levado para a tela de detalhes do local, on
 
 Nesta tela, o usuário pode selecionar o local no mapa usando a integração com o Google Maps.
 
-## Desenvolvimento
-
-Este aplicativo foi desenvolvido usando tecnologias de frontend e backend. O código-fonte completo está disponível neste repositório.
